@@ -55,5 +55,11 @@
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SendGrid-Test\SendGrid-Test.csproj">
+      <Project>{ea87edc7-9729-4430-b6cb-9de725574fd9}</Project>
+      <Name>SendGrid-Test</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

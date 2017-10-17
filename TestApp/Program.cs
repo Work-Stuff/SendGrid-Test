@@ -16,7 +16,8 @@ namespace TestApp
     {
         private static void Main()
         {
-            string address = "bounce4@test.com";
+            string address = "bounce0@test.com";
+            // DeleteAllBounces(null).Wait();
             SendEmail(address).Wait();
             string bounces = GetAllBounces(DateTime.MinValue, DateTime.MaxValue).Result;
             BounceResponse[] response = JsonConvert.DeserializeObject<BounceResponse[]>(bounces);
@@ -67,6 +68,35 @@ namespace TestApp
                 'email-address': '" + email + "'" +
                 "}";
             DeleteBounceRequest request = new DeleteBounceRequest(method, @"suppression/bounces/" + email, queryParams);
+            Response response = await client.RequestAsync(request);
+            string responseString = await response.Body.ReadAsStringAsync();
+        }
+
+        static async Task DeleteAllBounces(params string[] emails)
+        {
+            string key = Environment.GetEnvironmentVariable("SENDGRID_API_KEY");
+
+            SendGridClient client = new SendGridClient(key);
+
+            SendGridClient.Method method = SendGridClient.Method.DELETE;
+            string requestBody;
+            if (emails == null)
+            {
+                requestBody = "{ \"delete_all\": true }";
+            }
+            else
+            {
+                requestBody = "{ 'emails': [ ";
+                for (int i = 0; i < emails.Length; i++)
+                {
+                    if (i == emails.Length - 1)
+                        requestBody += "'" + emails[i] + "'";
+                    else
+                        requestBody += "'" + emails[i] + "'" + ", ";
+                }
+                requestBody += " ] }";
+            }
+            DeleteAllBouncesRequest request = new DeleteAllBouncesRequest(method, @"suppression/bounces", requestBody);
             Response response = await client.RequestAsync(request);
             string responseString = await response.Body.ReadAsStringAsync();
             return;

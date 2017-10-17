@@ -39,5 +39,10 @@ namespace SendGrid_Test.Extensions
         {
             return await client.RequestAsync(request.method, request.RequestBody, request.QueryParams, request.URLPath);
         }
+
+        public static async Task<Response> RequestAsync(this SendGridClient client, DeleteAllBouncesRequest request)
+        {
+            return await client.RequestAsync(request.method, request.RequestBody, request.QueryParams, request.URLPath);
+        }
     }
 }

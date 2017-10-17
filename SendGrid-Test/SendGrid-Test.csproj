@@ -55,6 +55,8 @@
     <Compile Include="Requests\GetAllKeysRequest.cs" />
     <Compile Include="Requests\GetExistingKeyRequest.cs" />
     <Compile Include="Requests\Request.cs" />
+    <Compile Include="Responses\BounceResponse.cs" />
+    <Compile Include="Responses\IResponse.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

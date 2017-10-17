@@ -1,10 +1,14 @@
 ﻿using SendGrid;
+using Newtonsoft.Json;
 using SendGrid.Helpers.Mail;
 using SendGrid_Test;
 using SendGrid_Test.Requests;
 using SendGrid_Test.Extensions;
 using System;
+using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
+using SendGrid_Test.Responses;
 
 namespace TestApp
 {
@@ -12,13 +16,20 @@ namespace TestApp
     {
         private static void Main()
         {
-            SendEmail().Wait();
+            string address = "bounce4@test.com";
+            SendEmail(address).Wait();
             string bounces = GetAllBounces(DateTime.MinValue, DateTime.MaxValue).Result;
-            bool bounced = DidEmailBounce("bounce1@test.com").Result;
-            Console.WriteLine("Did Email Bounce: " + bounced);
-            DeleteBounce("bounce1@test.com").Wait();
-            bounced = DidEmailBounce("bounce1@test.com").Result;
-            Console.WriteLine("Did Email Bounce: " + bounced);
+            BounceResponse[] response = JsonConvert.DeserializeObject<BounceResponse[]>(bounces);
+            bool bounced = DidEmailBounce(address).Result;
+            if (bounced)
+            {
+                Console.WriteLine("Email Bounced Because: " + response.Last(x => x.Email.Equals(address)).Reason);
+                DeleteBounce(address).Wait();
+            }
+            else
+            {
+                Console.WriteLine("Email Did Not Bounce");
+            }
             Console.ReadKey();
         }
 
@@ -33,21 +44,16 @@ namespace TestApp
             GetAllBouncesRequest request = new GetAllBouncesRequest(method, @"suppression/bounces", queryParams);
             Response response = await client.RequestAsync(request);
             string responseString = await response.Body.ReadAsStringAsync();
+            if (response.StatusCode == HttpStatusCode.OK)
+                return responseString;
             return "";
         }
 
         static async Task<bool> DidEmailBounce(string email)
         {
-            string key = Environment.GetEnvironmentVariable("SENDGRID_API_KEY");
-
-            SendGridClient client = new SendGridClient(key);
-
-            SendGridClient.Method method = SendGridClient.Method.GET;
-            CheckBounceRequest request = new CheckBounceRequest(method, @"suppression/bounces/" + email);
-            Response response = await client.RequestAsync(request);
-            string responseString = await response.Body.ReadAsStringAsync();
-            return false;
-            
+            string bounces = await GetAllBounces(DateTime.MinValue, DateTime.MaxValue);
+            BounceResponse[] response = JsonConvert.DeserializeObject<BounceResponse[]>(bounces);
+            return response.Any(x => x.Email.Equals(email));
         }
 
         static async Task DeleteBounce(string email)
@@ -56,26 +62,31 @@ namespace TestApp
 
             SendGridClient client = new SendGridClient(key);
 
-            SendGridClient.Method method = SendGridClient.Method.POST;
+            SendGridClient.Method method = SendGridClient.Method.GET;
             string queryParams = @"{
                 'email-address': '" + email + "'" +
                 "}";
             DeleteBounceRequest request = new DeleteBounceRequest(method, @"suppression/bounces/" + email, queryParams);
+            Response response = await client.RequestAsync(request);
+            string responseString = await response.Body.ReadAsStringAsync();
+            return;
         }
 
-        static async Task SendEmail()
+        static async Task SendEmail(string address)
         {
             string apiKey = Environment.GetEnvironmentVariable("SENDGRID_API_KEY");
             SendGridClient client = new SendGridClient(apiKey);
-            EmailAddress from = new EmailAddress("bounce1@test.com", "Example User");
+            EmailAddress from = new EmailAddress(address, "Example User");
             string subject = "Sending with SendGrid is Fun";
-            EmailAddress to = new EmailAddress("bounce1@test.com", "Example User");
+            EmailAddress to = new EmailAddress(address, "Example User");
             string plainTextContent = "and easy to do anywhere, even with C#";
             string htmlContent = "<strong>and easy to do anywhere, even with C#</strong>";
             SendGridMessage msg = MailHelper.CreateSingleEmail(from, to, subject, plainTextContent, htmlContent);
             Response response = await client.SendEmailAsync(msg);
-            Console.WriteLine(response.StatusCode);
-            
+            if(response.StatusCode == HttpStatusCode.Accepted)
+                Console.WriteLine("Email Was Successfully Sent!");
+            else
+                Console.WriteLine("Error Sending Email: " + response.StatusCode);
         }
     }
 }

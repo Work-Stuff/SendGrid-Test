@@ -13,12 +13,30 @@ namespace TestApp
         private static void Main()
         {
             SendEmail().Wait();
-            bool bounced = DidEmailBounce("bounce1@test.com").Result;
-            Console.WriteLine("Did Email Bounce: " + bounced);
-            DeleteBounce("bounce1@test.com").Wait();
-            bounced = DidEmailBounce("bounce1@test.com").Result;
-            Console.WriteLine("Did Email Bounce: " + bounced);
-            Console.ReadKey();
+            string bounces = GetAllBounces(DateTime.MinValue, DateTime.MaxValue).Result;
+            //bool bounced = DidEmailBounce("bounce1@test.com").Result;
+            //Console.WriteLine("Did Email Bounce: " + bounced);
+            //DeleteBounce("bounce1@test.com").Wait();
+            //bounced = DidEmailBounce("bounce1@test.com").Result;
+            //Console.WriteLine("Did Email Bounce: " + bounced);
+            //Console.ReadKey();
+        }
+
+        static async Task<string> GetAllBounces(DateTime startTime, DateTime endTime)
+        {
+            string key = Environment.GetEnvironmentVariable("SENDGRID_API_KEY");
+
+            SendGridClient client = new SendGridClient(key);
+
+            SendGridClient.Method method = SendGridClient.Method.POST;
+            string queryParams = @"{" +
+                @"'end-time': " + endTime.Ticks + "," +
+                @"'start-time': " + startTime.Ticks +
+            @"}";
+            GetAllBouncesRequest request = new GetAllBouncesRequest(method, @"suppression/bounces/", queryParams);
+            Response response = await client.RequestAsync(request);
+            string responseString = await response.Body.ReadAsStringAsync();
+            return "";
         }
 
         static async Task<bool> DidEmailBounce(string email)

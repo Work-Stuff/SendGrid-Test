@@ -51,6 +51,7 @@
     <Compile Include="Requests\CheckBounceRequest.cs" />
     <Compile Include="Requests\CreateKeyRequest.cs" />
     <Compile Include="Requests\DeleteBounceRequest.cs" />
+    <Compile Include="Requests\GetAllBouncesRequest.cs" />
     <Compile Include="Requests\GetAllKeysRequest.cs" />
     <Compile Include="Requests\GetExistingKeyRequest.cs" />
     <Compile Include="Requests\Request.cs" />

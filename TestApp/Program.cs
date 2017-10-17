@@ -25,15 +25,12 @@ namespace TestApp
         static async Task<string> GetAllBounces(DateTime startTime, DateTime endTime)
         {
             string key = Environment.GetEnvironmentVariable("SENDGRID_API_KEY");
-
             SendGridClient client = new SendGridClient(key);
-
+            TimeSpan t = DateTime.UtcNow.AddDays(1) - new DateTime(1970, 1, 1);
+            int secondsSinceEpoch = (int)t.TotalSeconds;
+            string queryParams = "{ 'end_time': " + secondsSinceEpoch + ", 'start_time': 1 }";
             SendGridClient.Method method = SendGridClient.Method.GET;
-            string queryParams = @"{" +
-                @"'end-time': " + endTime.Ticks + "," +
-                @"'start-time': " + startTime.Ticks +
-            @"}";
-            GetAllBouncesRequest request = new GetAllBouncesRequest(method, @"suppression/bounces/", queryParams);
+            GetAllBouncesRequest request = new GetAllBouncesRequest(method, @"suppression/bounces", queryParams);
             Response response = await client.RequestAsync(request);
             string responseString = await response.Body.ReadAsStringAsync();
             return "";

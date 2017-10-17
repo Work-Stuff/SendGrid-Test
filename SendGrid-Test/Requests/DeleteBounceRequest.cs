@@ -11,7 +11,7 @@ namespace SendGrid_Test.Requests
     {
         public readonly SendGridClient.Method method;
         public readonly string urlPath;
-        public readonly string requestBody = string.Empty;
+        public readonly string requestBody = null;
         public readonly string queryParams;
 
         public DeleteBounceRequest(SendGridClient.Method method, string urlPath, string queryParams)

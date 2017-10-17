@@ -12,32 +12,32 @@ namespace SendGrid_Test.Extensions
     {
         public static async Task<Response> RequestAsync(this SendGridClient client, CreateKeyRequest request)
         {
-            return await client.RequestAsync(request.Method, request.URLPath, request.RequestBody);
+            return await client.RequestAsync(request.method, request.RequestBody, request.QueryParams, request.URLPath);
         }
 
         public static async Task<Response> RequestAsync(this SendGridClient client, GetAllKeysRequest request)
         {
-            return await client.RequestAsync(request.Method, request.URLPath, request.QueryParams);
+            return await client.RequestAsync(request.method, request.RequestBody, request.QueryParams, request.URLPath);
         }
 
         public static async Task<Response> RequestAsync(this SendGridClient client, GetExistingKeyRequest request)
         {
-            return await client.RequestAsync(request.Method, request.URLPath);
+            return await client.RequestAsync(request.method, request.RequestBody, request.QueryParams, request.URLPath);
         }
 
         public static async Task<Response> RequestAsync(this SendGridClient client, CheckBounceRequest request)
         {
-            return await client.RequestAsync(request.Method, request.URLPath);
+            return await client.RequestAsync(request.method, request.RequestBody, request.QueryParams, request.URLPath);
         }
 
         public static async Task<Response> RequestAsync(this SendGridClient client, DeleteBounceRequest request)
         {
-            return await client.RequestAsync(request.method, request.URLPath, request.QueryParams);
+            return await client.RequestAsync(request.method, request.RequestBody, request.QueryParams, request.URLPath);
         }
 
         public static async Task<Response> RequestAsync(this SendGridClient client, GetAllBouncesRequest request)
         {
-            return await client.RequestAsync(request.method, request.URLPath, request.QueryParams);
+            return await client.RequestAsync(request.method, request.RequestBody, request.QueryParams, request.URLPath);
         }
     }
 }

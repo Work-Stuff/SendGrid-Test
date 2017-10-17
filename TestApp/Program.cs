@@ -14,12 +14,12 @@ namespace TestApp
         {
             SendEmail().Wait();
             string bounces = GetAllBounces(DateTime.MinValue, DateTime.MaxValue).Result;
-            //bool bounced = DidEmailBounce("bounce1@test.com").Result;
-            //Console.WriteLine("Did Email Bounce: " + bounced);
-            //DeleteBounce("bounce1@test.com").Wait();
-            //bounced = DidEmailBounce("bounce1@test.com").Result;
-            //Console.WriteLine("Did Email Bounce: " + bounced);
-            //Console.ReadKey();
+            bool bounced = DidEmailBounce("bounce1@test.com").Result;
+            Console.WriteLine("Did Email Bounce: " + bounced);
+            DeleteBounce("bounce1@test.com").Wait();
+            bounced = DidEmailBounce("bounce1@test.com").Result;
+            Console.WriteLine("Did Email Bounce: " + bounced);
+            Console.ReadKey();
         }
 
         static async Task<string> GetAllBounces(DateTime startTime, DateTime endTime)
@@ -28,7 +28,7 @@ namespace TestApp
 
             SendGridClient client = new SendGridClient(key);
 
-            SendGridClient.Method method = SendGridClient.Method.POST;
+            SendGridClient.Method method = SendGridClient.Method.GET;
             string queryParams = @"{" +
                 @"'end-time': " + endTime.Ticks + "," +
                 @"'start-time': " + startTime.Ticks +
@@ -45,7 +45,7 @@ namespace TestApp
 
             SendGridClient client = new SendGridClient(key);
 
-            SendGridClient.Method method = SendGridClient.Method.POST;
+            SendGridClient.Method method = SendGridClient.Method.GET;
             CheckBounceRequest request = new CheckBounceRequest(method, @"suppression/bounces/" + email);
             Response response = await client.RequestAsync(request);
             string responseString = await response.Body.ReadAsStringAsync();

@@ -12,7 +12,7 @@ namespace SendGrid_Test.Requests
         public readonly SendGridClient.Method method;
         public readonly string urlPath;
         public readonly string requestBody;
-        public readonly string queryParams = string.Empty;
+        public readonly string queryParams = null;
 
         public CreateKeyRequest(SendGridClient.Method method, string urlPath, string requestBody)
         {

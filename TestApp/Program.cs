@@ -21,7 +21,7 @@ namespace TestApp
             SendEmail(address).Wait();
             string bounces = GetAllBounces(DateTime.MinValue, DateTime.MaxValue).Result;
             BounceResponse[] response = JsonConvert.DeserializeObject<BounceResponse[]>(bounces);
-            bool bounced = DidEmailBounce(address).Result;
+            bool bounced = DidEmailBounce(address, DateTime.MinValue, DateTime.MaxValue).Result;
             if (bounced)
             {
                 Console.WriteLine("Email Bounced Because: " + response.Last(x => x.Email.Equals(address)).Reason);
@@ -31,7 +31,25 @@ namespace TestApp
             {
                 Console.WriteLine("Email Did Not Bounce");
             }
+            EnumEmailState state = GetEmailState(address, DateTime.MinValue, DateTime.MaxValue).Result;
+            Console.WriteLine("The State of the Email is: " + state);
             Console.ReadKey();
+        }
+
+        static async Task<EnumEmailState> GetEmailState(string email, DateTime startTime, DateTime endTime)
+        {
+            bool bounced = await DidEmailBounce(email, startTime, endTime);
+            bool invalid = !(await IsEmailValid(email, startTime, endTime));
+            bool spam = await IsEmailSpam(email, startTime, endTime);
+
+            if (bounced)
+                return EnumEmailState.BOUNCED;
+            else if (invalid)
+                return EnumEmailState.INVALID;
+            else if (spam)
+                return EnumEmailState.SPAM;
+            else
+                return EnumEmailState.SENT;
         }
 
         static async Task<string> GetAllBounces(DateTime startTime, DateTime endTime)
@@ -82,23 +100,23 @@ namespace TestApp
                 return responseString;
             return "";
         }
-        static async Task<bool> DidEmailBounce(string email)
+        static async Task<bool> DidEmailBounce(string email, DateTime startTime, DateTime endTime)
         {
-            string bounces = await GetAllBounces(DateTime.MinValue, DateTime.MaxValue);
+            string bounces = await GetAllBounces(startTime, endTime);
             BounceResponse[] response = JsonConvert.DeserializeObject<BounceResponse[]>(bounces);
             return response.Any(x => x.Email.Equals(email));
         }
 
-        static async Task<bool> IsEmailSpam(string email)
+        static async Task<bool> IsEmailSpam(string email, DateTime startTime, DateTime endTime)
         {
-            string bounces = await GetAllBounces(DateTime.MinValue, DateTime.MaxValue);
+            string bounces = await GetAllBounces(startTime, endTime);
             SpamEmailResponse[] response = JsonConvert.DeserializeObject<SpamEmailResponse[]>(bounces);
             return response.Any(x => x.Email.Equals(email));
         }
 
-        static async Task<bool> IsEmailValid(string email)
+        static async Task<bool> IsEmailValid(string email, DateTime startTime, DateTime endTime)
         {
-            string bounces = await GetAllBounces(DateTime.MinValue, DateTime.MaxValue);
+            string bounces = await GetAllBounces(startTime, endTime);
             InvalidEmailResponse[] response = JsonConvert.DeserializeObject<InvalidEmailResponse[]>(bounces);
             return !response.Any(x => x.Email.Equals(email));
         }

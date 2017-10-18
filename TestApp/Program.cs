@@ -50,11 +50,34 @@ namespace TestApp
             return "";
         }
 
+
+        static async Task<string> GetAllInvalidEmails(DateTime startTime, DateTime endTime)
+        {
+            string key = Environment.GetEnvironmentVariable("SENDGRID_API_KEY");
+            SendGridClient client = new SendGridClient(key);
+            TimeSpan t = DateTime.UtcNow.AddDays(1) - new DateTime(1970, 1, 1);
+            int secondsSinceEpoch = (int)t.TotalSeconds;
+            string queryParams = "{ 'end_time': " + secondsSinceEpoch + ", 'start_time': 1 }";
+            SendGridClient.Method method = SendGridClient.Method.GET;
+            GetAllInvalidEmailsRequest request = new GetAllInvalidEmailsRequest(method, @"suppression/invalid_emails", queryParams);
+            Response response = await client.RequestAsync(request);
+            string responseString = await response.Body.ReadAsStringAsync();
+            if (response.StatusCode == HttpStatusCode.OK)
+                return responseString;
+            return "";
+        }
         static async Task<bool> DidEmailBounce(string email)
         {
             string bounces = await GetAllBounces(DateTime.MinValue, DateTime.MaxValue);
             BounceResponse[] response = JsonConvert.DeserializeObject<BounceResponse[]>(bounces);
             return response.Any(x => x.Email.Equals(email));
+        }
+
+        static async Task<bool> IsEmailValid(string email)
+        {
+            string bounces = await GetAllBounces(DateTime.MinValue, DateTime.MaxValue);
+            InvalidEmailResponse[] response = JsonConvert.DeserializeObject<InvalidEmailResponse[]>(bounces);
+            return !response.Any(x => x.Email.Equals(email));
         }
 
         static async Task DeleteBounce(string email)
@@ -72,6 +95,20 @@ namespace TestApp
             string responseString = await response.Body.ReadAsStringAsync();
         }
 
+        static async Task DeleteInvalidEmail(string email)
+        {
+            string key = Environment.GetEnvironmentVariable("SENDGRID_API_KEY");
+
+            SendGridClient client = new SendGridClient(key);
+
+            SendGridClient.Method method = SendGridClient.Method.GET;
+            string queryParams = @"{
+                'email-address': '" + email + "'" +
+                                 "}";
+            DeleteInvalidEmailRequest request = new DeleteInvalidEmailRequest(method, @"suppression/invalid_emails/" + email);
+            Response response = await client.RequestAsync(request);
+            string responseString = await response.Body.ReadAsStringAsync();
+        }
         static async Task DeleteAllBounces(params string[] emails)
         {
             string key = Environment.GetEnvironmentVariable("SENDGRID_API_KEY");
@@ -99,9 +136,36 @@ namespace TestApp
             DeleteAllBouncesRequest request = new DeleteAllBouncesRequest(method, @"suppression/bounces", requestBody);
             Response response = await client.RequestAsync(request);
             string responseString = await response.Body.ReadAsStringAsync();
-            return;
         }
 
+        static async Task DeleteAllInvalidEmails(params string[] emails)
+        {
+            string key = Environment.GetEnvironmentVariable("SENDGRID_API_KEY");
+
+            SendGridClient client = new SendGridClient(key);
+
+            SendGridClient.Method method = SendGridClient.Method.DELETE;
+            string requestBody;
+            if (emails == null)
+            {
+                requestBody = "{ \"delete_all\": true }";
+            }
+            else
+            {
+                requestBody = "{ 'emails': [ ";
+                for (int i = 0; i < emails.Length; i++)
+                {
+                    if (i == emails.Length - 1)
+                        requestBody += "'" + emails[i] + "'";
+                    else
+                        requestBody += "'" + emails[i] + "'" + ", ";
+                }
+                requestBody += " ] }";
+            }
+            DeleteAllInvalidEmailsRequest request = new DeleteAllInvalidEmailsRequest(method, @"suppression/bounces", requestBody);
+            Response response = await client.RequestAsync(request);
+            string responseString = await response.Body.ReadAsStringAsync();
+        }
         static async Task SendEmail(string address)
         {
             string apiKey = Environment.GetEnvironmentVariable("SENDGRID_API_KEY");

@@ -51,18 +51,23 @@
     <Compile Include="Requests\CheckBounceRequest.cs" />
     <Compile Include="Requests\CreateKeyRequest.cs" />
     <Compile Include="Requests\DeleteAllBouncesRequest.cs" />
+    <Compile Include="Requests\DeleteAllSpamEmailsRequest.cs" />
     <Compile Include="Requests\DeleteBounceRequest.cs" />
+    <Compile Include="Requests\DeleteSpamEmailRequest.cs" />
     <Compile Include="Requests\GetAllBouncesRequest.cs" />
     <Compile Include="Requests\DeleteAllInvalidEmailsRequest.cs" />
+    <Compile Include="Requests\GetAllSpamEmailsRequest.cs" />
     <Compile Include="Requests\GetAllInvalidEmailsRequest.cs" />
     <Compile Include="Requests\GetAllKeysRequest.cs" />
     <Compile Include="Requests\GetExistingKeyRequest.cs" />
     <Compile Include="Requests\DeleteInvalidEmailRequest.cs" />
+    <Compile Include="Requests\GetSpamEmailRequest.cs" />
     <Compile Include="Requests\GetInvalidEmailRequest.cs" />
     <Compile Include="Requests\Request.cs" />
     <Compile Include="Responses\BounceResponse.cs" />
     <Compile Include="Responses\InvalidEmailResponse.cs" />
     <Compile Include="Responses\IResponse.cs" />
+    <Compile Include="Responses\SpamEmailResponse.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

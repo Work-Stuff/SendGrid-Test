@@ -50,6 +50,22 @@ namespace TestApp
             return "";
         }
 
+        static async Task<string> GetAllSpamEmails(DateTime startTime, DateTime endTime)
+        {
+            string key = Environment.GetEnvironmentVariable("SENDGRID_API_KEY");
+            SendGridClient client = new SendGridClient(key);
+            TimeSpan t = DateTime.UtcNow.AddDays(1) - new DateTime(1970, 1, 1);
+            int secondsSinceEpoch = (int)t.TotalSeconds;
+            string queryParams = "{ 'end_time': " + secondsSinceEpoch + ", 'start_time': 1 }";
+            SendGridClient.Method method = SendGridClient.Method.GET;
+            GetAllSpamEmailsRequest request = new GetAllSpamEmailsRequest(method, @"suppression/spam_reports", queryParams);
+            Response response = await client.RequestAsync(request);
+            string responseString = await response.Body.ReadAsStringAsync();
+            if (response.StatusCode == HttpStatusCode.OK)
+                return responseString;
+            return "";
+        }
+
 
         static async Task<string> GetAllInvalidEmails(DateTime startTime, DateTime endTime)
         {
@@ -70,6 +86,13 @@ namespace TestApp
         {
             string bounces = await GetAllBounces(DateTime.MinValue, DateTime.MaxValue);
             BounceResponse[] response = JsonConvert.DeserializeObject<BounceResponse[]>(bounces);
+            return response.Any(x => x.Email.Equals(email));
+        }
+
+        static async Task<bool> IsEmailSpam(string email)
+        {
+            string bounces = await GetAllBounces(DateTime.MinValue, DateTime.MaxValue);
+            SpamEmailResponse[] response = JsonConvert.DeserializeObject<SpamEmailResponse[]>(bounces);
             return response.Any(x => x.Email.Equals(email));
         }
 
@@ -106,6 +129,21 @@ namespace TestApp
                 'email-address': '" + email + "'" +
                                  "}";
             DeleteInvalidEmailRequest request = new DeleteInvalidEmailRequest(method, @"suppression/invalid_emails/" + email);
+            Response response = await client.RequestAsync(request);
+            string responseString = await response.Body.ReadAsStringAsync();
+        }
+
+        static async Task DeleteSpamEmail(string email)
+        {
+            string key = Environment.GetEnvironmentVariable("SENDGRID_API_KEY");
+
+            SendGridClient client = new SendGridClient(key);
+
+            SendGridClient.Method method = SendGridClient.Method.GET;
+            string queryParams = @"{
+                'email-address': '" + email + "'" +
+                                 "}";
+            DeleteSpamEmailRequest request = new DeleteSpamEmailRequest(method, @"suppression/spam_reports/" + email);
             Response response = await client.RequestAsync(request);
             string responseString = await response.Body.ReadAsStringAsync();
         }
@@ -163,6 +201,35 @@ namespace TestApp
                 requestBody += " ] }";
             }
             DeleteAllInvalidEmailsRequest request = new DeleteAllInvalidEmailsRequest(method, @"suppression/bounces", requestBody);
+            Response response = await client.RequestAsync(request);
+            string responseString = await response.Body.ReadAsStringAsync();
+        }
+
+        static async Task DeleteAllSpamEmails(params string[] emails)
+        {
+            string key = Environment.GetEnvironmentVariable("SENDGRID_API_KEY");
+
+            SendGridClient client = new SendGridClient(key);
+
+            SendGridClient.Method method = SendGridClient.Method.DELETE;
+            string requestBody;
+            if (emails == null)
+            {
+                requestBody = "{ \"delete_all\": true }";
+            }
+            else
+            {
+                requestBody = "{ 'emails': [ ";
+                for (int i = 0; i < emails.Length; i++)
+                {
+                    if (i == emails.Length - 1)
+                        requestBody += "'" + emails[i] + "'";
+                    else
+                        requestBody += "'" + emails[i] + "'" + ", ";
+                }
+                requestBody += " ] }";
+            }
+            DeleteAllSpamEmailsRequest request = new DeleteAllSpamEmailsRequest(method, @"suppression/spam_reports", requestBody);
             Response response = await client.RequestAsync(request);
             string responseString = await response.Body.ReadAsStringAsync();
         }

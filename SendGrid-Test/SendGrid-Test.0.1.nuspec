@@ -1,0 +1,80 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
+    <metadata>
+        <id>SendGrid-Test</id>
+        <version>0.1</version>
+        <title>SendGrid-Test</title>
+        <authors>Tom Needham</authors>
+        <owners>Tom Needham</owners>
+        <licenseUrl>https://opensource.org/licenses/MIT</licenseUrl>
+        <projectUrl>https://github.com/Work-Stuff/SendGrid-Test</projectUrl>
+        <requireLicenseAcceptance>false</requireLicenseAcceptance>
+        <description>Lightweight Wrapper to get the status of emails from SendGrid</description>
+        <summary>Lightweight Wrapper to get the status of emails from SendGrid</summary>
+        <releaseNotes>Summary of changes made in this release of the package.</releaseNotes>
+        <copyright>Copyright 2017</copyright>
+        <language>en-GB</language>
+        <tags>Emails, SendGrid</tags>
+        <dependencies>
+            <group targetFramework=".NETFramework4.61">
+                <dependency id="Newtonsoft.Json" version="10.0.3" />
+                <dependency id="Sendgrid" version="9.9.0" />
+                <dependency id="Sendgrid.Webhooks" version="1.2.2" />
+            </group>
+        </dependencies>
+    </metadata>
+    <files>
+        <file src="bin\Debug\Newtonsoft.Json.dll" target="bin\Debug\Newtonsoft.Json.dll" />
+        <file src="bin\Debug\Newtonsoft.Json.xml" target="bin\Debug\Newtonsoft.Json.xml" />
+        <file src="bin\Debug\SendGrid-Test.dll" target="bin\Debug\SendGrid-Test.dll" />
+        <file src="bin\Debug\SendGrid-Test.dll.config" target="bin\Debug\SendGrid-Test.dll.config" />
+        <file src="bin\Debug\SendGrid-Test.pdb" target="bin\Debug\SendGrid-Test.pdb" />
+        <file src="bin\Debug\SendGrid.dll" target="bin\Debug\SendGrid.dll" />
+        <file src="bin\Debug\SendGrid.pdb" target="bin\Debug\SendGrid.pdb" />
+        <file src="bin\Debug\Sendgrid.Webhooks.dll" target="bin\Debug\Sendgrid.Webhooks.dll" />
+        <file src="bin\Debug\SendGrid.xml" target="bin\Debug\SendGrid.xml" />
+        <file src="bin\Debug\System.Net.Http.dll" target="bin\Debug\System.Net.Http.dll" />
+        <file src="bin\Debug\System.Security.Cryptography.Algorithms.dll" target="bin\Debug\System.Security.Cryptography.Algorithms.dll" />
+        <file src="bin\Debug\System.Security.Cryptography.Encoding.dll" target="bin\Debug\System.Security.Cryptography.Encoding.dll" />
+        <file src="bin\Debug\System.Security.Cryptography.Primitives.dll" target="bin\Debug\System.Security.Cryptography.Primitives.dll" />
+        <file src="bin\Debug\System.Security.Cryptography.X509Certificates.dll" target="bin\Debug\System.Security.Cryptography.X509Certificates.dll" />
+        <file src="Extensions\SendGridClientExtensions.cs" target="Extensions\SendGridClientExtensions.cs" />
+        <file src="bin\Debug\SendGrid-Test.dll" target="lib\SendGrid-Test.dll" />
+        <file src="bin\Debug\SendGrid-Test.dll.config" target="lib\SendGrid-Test.dll.config" />
+        <file src="bin\Debug\SendGrid-Test.pdb" target="lib\SendGrid-Test.pdb" />
+        <file src="obj\Debug\DesignTimeResolveAssemblyReferencesInput.cache" target="obj\Debug\DesignTimeResolveAssemblyReferencesInput.cache" />
+        <file src="obj\Debug\SendGrid-Test.csproj.CopyComplete" target="obj\Debug\SendGrid-Test.csproj.CopyComplete" />
+        <file src="obj\Debug\SendGrid-Test.csproj.CoreCompileInputs.cache" target="obj\Debug\SendGrid-Test.csproj.CoreCompileInputs.cache" />
+        <file src="obj\Debug\SendGrid-Test.csproj.FileListAbsolute.txt" target="obj\Debug\SendGrid-Test.csproj.FileListAbsolute.txt" />
+        <file src="obj\Debug\SendGrid-Test.csprojResolveAssemblyReference.cache" target="obj\Debug\SendGrid-Test.csprojResolveAssemblyReference.cache" />
+        <file src="obj\Debug\SendGrid-Test.dll" target="obj\Debug\SendGrid-Test.dll" />
+        <file src="obj\Debug\SendGrid-Test.pdb" target="obj\Debug\SendGrid-Test.pdb" />
+        <file src="obj\Debug\TemporaryGeneratedFile_036C0B5B-1481-4323-8D20-8F5ADCB23D92.cs" target="obj\Debug\TemporaryGeneratedFile_036C0B5B-1481-4323-8D20-8F5ADCB23D92.cs" />
+        <file src="obj\Debug\TemporaryGeneratedFile_5937a670-0e60-4077-877b-f7221da3dda1.cs" target="obj\Debug\TemporaryGeneratedFile_5937a670-0e60-4077-877b-f7221da3dda1.cs" />
+        <file src="obj\Debug\TemporaryGeneratedFile_E7A71F73-0F8D-4B9B-B56E-8E70B10BC5D3.cs" target="obj\Debug\TemporaryGeneratedFile_E7A71F73-0F8D-4B9B-B56E-8E70B10BC5D3.cs" />
+        <file src="Properties\AssemblyInfo.cs" target="Properties\AssemblyInfo.cs" />
+        <file src="Requests\CheckBounceRequest.cs" target="Requests\CheckBounceRequest.cs" />
+        <file src="Requests\CreateKeyRequest.cs" target="Requests\CreateKeyRequest.cs" />
+        <file src="Requests\DeleteAllBouncesRequest.cs" target="Requests\DeleteAllBouncesRequest.cs" />
+        <file src="Requests\DeleteAllInvalidEmailsRequest.cs" target="Requests\DeleteAllInvalidEmailsRequest.cs" />
+        <file src="Requests\DeleteAllSpamEmailsRequest.cs" target="Requests\DeleteAllSpamEmailsRequest.cs" />
+        <file src="Requests\DeleteBounceRequest.cs" target="Requests\DeleteBounceRequest.cs" />
+        <file src="Requests\DeleteInvalidEmailRequest.cs" target="Requests\DeleteInvalidEmailRequest.cs" />
+        <file src="Requests\DeleteSpamEmailRequest.cs" target="Requests\DeleteSpamEmailRequest.cs" />
+        <file src="Requests\GetAllBouncesRequest.cs" target="Requests\GetAllBouncesRequest.cs" />
+        <file src="Requests\GetAllInvalidEmailsRequest.cs" target="Requests\GetAllInvalidEmailsRequest.cs" />
+        <file src="Requests\GetAllKeysRequest.cs" target="Requests\GetAllKeysRequest.cs" />
+        <file src="Requests\GetAllSpamEmailsRequest.cs" target="Requests\GetAllSpamEmailsRequest.cs" />
+        <file src="Requests\GetExistingKeyRequest.cs" target="Requests\GetExistingKeyRequest.cs" />
+        <file src="Requests\GetInvalidEmailRequest.cs" target="Requests\GetInvalidEmailRequest.cs" />
+        <file src="Requests\GetSpamEmailRequest.cs" target="Requests\GetSpamEmailRequest.cs" />
+        <file src="Requests\Request.cs" target="Requests\Request.cs" />
+        <file src="Responses\BounceResponse.cs" target="Responses\BounceResponse.cs" />
+        <file src="Responses\InvalidEmailResponse.cs" target="Responses\InvalidEmailResponse.cs" />
+        <file src="Responses\IResponse.cs" target="Responses\IResponse.cs" />
+        <file src="Responses\SpamEmailResponse.cs" target="Responses\SpamEmailResponse.cs" />
+        <file src="app.config" target="app.config" />
+        <file src="EnumEmailState.cs" target="EnumEmailState.cs" />
+        <file src="SendGrid-Test.csproj" target="SendGrid-Test.csproj" />
+    </files>
+</package>

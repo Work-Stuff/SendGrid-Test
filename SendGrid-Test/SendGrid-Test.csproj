@@ -91,5 +91,11 @@
     <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SendGrid-Webhooks\SendGrid-Webhooks.csproj">
+      <Project>{2120c7f2-d864-4c10-981b-b3839c7357e5}</Project>
+      <Name>SendGrid-Webhooks</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
